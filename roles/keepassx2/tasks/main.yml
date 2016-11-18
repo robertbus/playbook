@@ -1,0 +1,131 @@
+---
+
+# This task installs KeePassX 2 from source.
+# https://dev.keepassx.org/projects/keepassx/wiki/Install_instructions
+
+- name: Create temporary work directory
+  tags: keepassx2
+  file: path={{tmpDir}} state=directory mode=0755
+
+- name: Download GPG public key
+  tags: keepassx2
+  get_url:
+    url: https://www.keepassx.org/gpg/0x83135D45.asc
+    dest: "{{tmpDir}}/0x83135D45.asc"
+    mode: 0644
+
+- name: Import GPG public key
+  tags: keepassx2
+  command: chdir={{tmpDir}} gpg --import 0x83135D45.asc
+
+- name: Download SHA256SUMS
+  tags: keepassx2
+  get_url:
+    url: https://www.keepassx.org/releases/{{version}}/SHA256SUMS
+    dest: "{{tmpDir}}/SHA256SUMS"
+    mode: 0644
+
+- name: Download SHA256SUMS signature
+  tags: keepassx2
+  get_url:
+    url: https://www.keepassx.org/releases/{{version}}/SHA256SUMS.sig
+    dest: "{{tmpDir}}/SHA256SUMS.sig"
+    mode: 0644
+
+- name: Verify SHA256SUMS signature
+  tags: keepassx2
+  command: chdir={{tmpDir}} gpg --verify SHA256SUMS.sig SHA256SUMS
+  register: sha256sumsVerification
+
+- name: Download sources
+  tags: keepassx2
+  when: sha256sumsVerification.rc == 0
+  get_url:
+    url: https://www.keepassx.org/releases/{{version}}/keepassx-{{version}}.tar.gz
+    dest: "{{tmpDir}}/keepassx-{{version}}.tar.gz"
+    mode: 0644
+
+- name: Download sources signature
+  tags: keepassx2
+  when: sha256sumsVerification.rc == 0
+  get_url:
+    url: https://www.keepassx.org/releases/{{version}}/keepassx-{{version}}.tar.gz.sig
+    dest: "{{tmpDir}}/keepassx-{{version}}.tar.gz.sig"
+    mode: 0644
+
+- name: Verify sources signature
+  tags: keepassx2
+  command: chdir={{tmpDir}} gpg --verify keepassx-{{version}}.tar.gz.sig keepassx-{{version}}.tar.gz
+  register: sourcesVerification
+
+- name: Grep the SHA256SUM of the tar.gz file into a separate file
+  tags: keepassx2
+  when: sourcesVerification.rc == 0
+  shell: chdir={{tmpDir}} grep tar.gz SHA256SUMS > keepassx-{{version}}.tar.gz.sha256
+
+- name: Check SHA256SUM of the tar.gz file
+  tags: keepassx2
+  when: sourcesVerification.rc == 0
+  command: chdir={{tmpDir}} sha256sum -c keepassx-{{version}}.tar.gz.sha256
+  register: sourcesChecksum
+
+- name: Extract sources
+  tags: keepassx2
+  when: sourcesChecksum.rc == 0
+  unarchive: src={{tmpDir}}/keepassx-{{version}}.tar.gz dest={{tmpDir}}
+
+- name: Update repositories cache
+  tags: keepassx2
+  when: sourcesChecksum.rc == 0
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt:
+    update_cache: yes
+
+- name: Install packages needed for building
+  tags: keepassx2
+  when: sourcesChecksum.rc == 0
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt: name={{item}} state=present
+  with_items:
+    - build-essential
+    - cmake
+    - libqt4-dev
+    - libgcrypt11-dev
+    - zlib1g-dev
+    - libxi-dev
+    - libxtst-dev
+
+- name: Create build directory
+  tags: keepassx2
+  when: sourcesChecksum.rc == 0
+  file: path={{tmpDir}}/keepassx-{{version}}/build state=directory mode=0755
+
+- name: Generate Makefile
+  tags: keepassx2
+  when: sourcesChecksum.rc == 0
+  register: cmakeOutcome
+  command: chdir={{tmpDir}}/keepassx-{{version}}/build cmake ..
+
+- name: Build KeePassX 2
+  tags: keepassx2
+  when: cmakeOutcome.rc == 0
+  register: buildOutcome
+  command: chdir={{tmpDir}}/keepassx-{{version}}/build make
+
+- name: Install KeePassX 2
+  tags: keepassx2
+  when: buildOutcome.rc == 0
+  register: installOutcome
+  become: yes
+  become_user: root
+  become_method: sudo
+  command: chdir={{tmpDir}}/keepassx-{{version}}/build make install
+
+- name: Cleanup
+  tags: keepassx2
+  when: installOutcome.rc == 0
+  file: path={{tmpDir}} state=absent
