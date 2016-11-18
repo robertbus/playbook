@@ -1,4 +1,4 @@
-# My playbooks
+# Personal playbook
 
 This is my personal [Ansible](https://www.ansible.com/) playbook to set up a freshly installed [Ubuntu](https://www.ubuntu.com/) with the softwares I prefer to use.
 

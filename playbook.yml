@@ -4,5 +4,6 @@
   connection: local
   user: robert
   roles:
+    - system
     - atom
     - insync
