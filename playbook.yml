@@ -5,3 +5,4 @@
   user: robert
   roles:
     - atom
+    - insync
