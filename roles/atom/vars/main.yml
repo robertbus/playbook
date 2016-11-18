@@ -1,0 +1,5 @@
+---
+
+tmpDir: /tmp/myPlaybooks/atom
+version: v1.12.4
+package: atom-amd64.deb

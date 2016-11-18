@@ -1,0 +1,23 @@
+---
+
+# This task installs Atom text editor.
+# https://atom.io/
+# https://github.com/atom/atom/releases
+
+- name: Create temporary work directory
+  file: path={{tmpDir}} state=directory mode=0755
+
+- name: Download package
+  get_url:
+    url: https://github.com/atom/atom/releases/download/{{version}}/{{package}}
+    dest: "{{tmpDir}}/{{package}}"
+    mode: 0644
+
+- name: Install package
+  become: yes
+  become_user: root
+  become_method: sudo
+  command: chdir={{tmpDir}} dpkg -i {{package}}
+
+- name: Cleanup
+  file: path={{tmpDir}} state=absent
