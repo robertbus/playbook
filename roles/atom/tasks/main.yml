@@ -2,7 +2,6 @@
 
 # This task installs Atom text editor.
 # https://atom.io/
-# https://github.com/atom/atom/releases
 
 - name: Create temporary work directory
   tags: atom
@@ -11,7 +10,7 @@
 - name: Download package
   tags: atom
   get_url:
-    url: https://github.com/atom/atom/releases/download/{{version}}/{{package}}
+    url: "{{url}}"
     dest: "{{tmpDir}}/{{package}}"
     mode: 0644
 
