@@ -6,5 +6,6 @@
   roles:
     - system
     - atom
+    - sublime
     - insync
     - keepassx2

@@ -1,0 +1,26 @@
+---
+
+# This task installs Sublime text editor.
+# https://www.sublimetext.com/3
+
+- name: Create temporary work directory
+  tags: sublime
+  file: path={{tmpDir}} state=directory mode=0755
+
+- name: Download package
+  tags: sublime
+  get_url:
+    url: "{{url}}"
+    dest: "{{tmpDir}}/{{package}}"
+    mode: 0644
+
+- name: Install package
+  tags: sublime
+  become: yes
+  become_user: root
+  become_method: sudo
+  command: chdir={{tmpDir}} dpkg -i {{package}}
+
+- name: Cleanup
+  tags: sublime
+  file: path={{tmpDir}} state=absent

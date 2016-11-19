@@ -1,0 +1,6 @@
+---
+
+tmpDir: /tmp/myPlaybook/sublime
+version: 3126
+package: sublime-text_build-{{version}}_amd64.deb
+url: https://download.sublimetext.com/{{package}}
