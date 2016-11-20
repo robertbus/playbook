@@ -66,3 +66,4 @@
     - gcc
     - g++
     - build-essential
+    - xmlstarlet
