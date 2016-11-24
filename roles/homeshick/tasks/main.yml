@@ -1,0 +1,16 @@
+---
+
+# This task installs the homeshick git dotfiles synchronizer.
+# https://github.com/andsens/homeshick
+
+- name: Install
+  tags: homeshick
+  shell: git clone git://github.com/andsens/homeshick.git $HOME/.homesick/repos/homeshick
+
+- name: Update .bashrc
+  tags: homeshick
+  shell: printf '\nsource "$HOME/.homesick/repos/homeshick/homeshick.sh"' >> $HOME/.bashrc
+
+- name: Add autocomplete
+  tags: homeshick
+  shell: printf '\nsource "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"\n' >> $HOME/.bashrc
