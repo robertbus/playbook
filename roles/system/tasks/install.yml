@@ -12,6 +12,7 @@
     # editors
     - vim
     # command-line utils
+    - bash-doc
     - sudo
     - sed
     - gawk
