@@ -71,3 +71,5 @@
     - g++
     - build-essential
     - xmlstarlet
+    # system monitor dependency
+    - gir1.2-gtop-2.0
