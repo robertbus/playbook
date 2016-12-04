@@ -58,6 +58,9 @@
     - dropbox
     - sysinfo
     - workrave
+    - doublecmd-gtk
+    - gsmartcontrol
+    - gparted
     # fonts
     - ttf-mscorefonts-installer
     - fonts-inconsolata
