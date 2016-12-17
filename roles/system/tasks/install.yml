@@ -32,7 +32,7 @@
     # internet
     - wget
     - curl
-    - skype
+    ###- skype
     - filezilla
     # firewall
     - ufw
@@ -55,7 +55,7 @@
     - terminator
     - redshift
     - redshift-gtk
-    - dropbox
+    ###- dropbox
     - sysinfo
     - workrave
     - doublecmd-gtk

@@ -3,6 +3,16 @@
 # This task installs Atom text editor.
 # https://atom.io/
 
+- name: Install dependecies
+  tags: atom
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt: name={{item}} state=present
+  with_items:
+    - libnotify4
+    - gvfs-bin
+
 - name: Create temporary work directory
   tags: atom
   file: path={{tmpDir}} state=directory mode=0755

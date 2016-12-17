@@ -1,6 +1,6 @@
 ---
 
 tmpDir: /tmp/myPlaybook/atom
-version: v1.12.4
+version: v1.12.7
 package: atom-amd64.deb
 url: https://github.com/atom/atom/releases/download/{{version}}/{{package}}
