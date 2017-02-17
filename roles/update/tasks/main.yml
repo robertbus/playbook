@@ -1,0 +1,12 @@
+---
+
+# This task updates the system to the latest available version.
+
+- name: Update the system to latest
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt:
+    update_cache: yes
+    upgrade: full
+    autoremove: yes
