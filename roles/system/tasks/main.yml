@@ -2,8 +2,8 @@
 
 # This task updates the system and installs the preferred packages.
 
-- name: Update system
-  include: update.yml
+#- name: Update system
+#  include: update.yml
 
 - name: Install preferred packages
   include: install.yml
